@@ -1,0 +1,29 @@
+name: "Kubeval"
+description: "Validate Kubernetes manifests using the upstream Schemas"
+author: "kb <kb@aimmo.co.kr>"
+branding:
+  icon: "check"
+  color: "green"
+inputs: 
+  files:
+    description: "Files or directories to validate"
+    default: "."
+  output:
+    description: "Output format for results"
+    default: "stdout"
+  schema_location:
+    description: Base URL used to download schemas. Base URL contains the argo-workflow Schemas.
+    default: "https://raw.githubusercontent.com/mojokb/kubernetes-json-schema/master"
+  ignore_missing_schemas:
+    description: "Whether or not to skip custom resources" 
+    default: true
+runs:
+  using: 'docker'
+  image: 'docker://brightfly/kubeval-action:latest'
+  args:
+  - -d
+  - ${{ inputs.files }} 
+  - -o
+  - ${{ inputs.output }}
+  - --ignore-missing-schemas=${{ inputs.ignore_missing_schemas }}
+  - --schema-location=${{inputs.schema_location}}
